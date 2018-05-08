@@ -13,24 +13,32 @@ def create_weight_matrix( x ):
 				matrix[i][j] = s
 	return matrix
 
+def activation_function( x ):
+	if( x >= 0 ):
+		return 1
+	else:
+		return -1
+
 def activation( m ):
 	matrix_length = len( m[0] )
 	for i in range(0, matrix_length):
 		for j in range(0, matrix_length):
 			if i != j:
-				if( matrix[i][j] >= 0 ):
-					matrix[i][j] = 1
-				else:
-					matrix[i][j] = -1
-	print( m )
+				matrix[i][j] = activation_function(matrix[i][j])
 
-def get_output( x ):
-	print( np.dot([x], matrix) )
+def get_output( x, matrix ):
+	tmp = np.dot([x], matrix)
+	tmp = [ activation_function(i) for i in tmp[0] ]
+	print( "input evualued: \t", tmp )
+	return tmp
 
 if __name__ == "__main__":
 	inp = [[1,1,1], [-1,-1,-1]]
-	imp_t = [-1,1-1]
+	imp_t = [-1, 1, -1]
 
 	matrix = create_weight_matrix( inp )
 	activation( matrix )
-	get_output( imp_t )
+
+	print( matrix )
+
+	get_output( imp_t, matrix )
