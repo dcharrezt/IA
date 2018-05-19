@@ -5,34 +5,43 @@ from sklearn.model_selection import train_test_split
 from sklearn import datasets
 # from sklearn import preproccesing
 
-
-n_inputs = 4
-n_hidden_layers = [2, 4]
-n_outputs = 3
+n_inputs = 2
+n_hidden_layers = [3, 2]
+n_outputs = 2
 
 
 def sigmoid( x ):
 	return 1 / ( 1 + math.exp(-x) )
 
 def sigmoid_derivative( x ):
-	return math.exp( x ) / (1+math.exp(-x))**2
+	return x*(1-x)
 
 def initialize_weights(n_inputs, n_hidden_layers, n_outputs):
-	current_input = n_inputs
 	network = []
-	# hidden_layers = [ [ [ random.random() for i in range(k) ] \
-	# 							for j in range(k+1)] for k in n_hidden_layers]
-	hidden_layers = []
-	for i in n_hidden_layers:
-		for j in range( i ):
-			hidden_layers.append( [ random.random() for k in range(current_input+1) ] )
-		current_input = i
+	neurons_per_layer = list( n_hidden_layers )
+	neurons_per_layer = [n_inputs] + neurons_per_layer + [n_outputs]
+		
+	for i in range( len(neurons_per_layer) - 1 ):
+		network.append( np.random.rand( neurons_per_layer[i+1], \
+					neurons_per_layer[i] + 1 ) ) 
 
-	# output_layer = [ random.random() for i in range(n_outputs) ] 
-	print( hidden_layers )
+	return network
 
-# def forward_propagation():
+def forward_propagation( X_train , network ):
 
+	X_train_wbias = list(X_train) + [1]
+	tmp_out = [] 
+	for layer in network:
+		tmp_out = [] 
+		print("layer\t", layer)
+		for neuron in layer:
+			print("neuron\t", neuron)
+			print("X\t", X_train_wbias)
+			tmp_out.append( np.dot( X_train_wbias, neuron ) )
+		tmp_out = [ sigmoid(i) for i in tmp_out]
+		X_train_wbias = list(tmp_out) + [1]
+
+	print("TMP", tmp_out)
 
 
 
@@ -43,8 +52,9 @@ if __name__ == "__main__":
 	X_train, X_test, y_train, y_test = train_test_split(
 				iris.data, iris.target, test_size=0.4, random_state=0)
 
-	initialize_weights( n_inputs, n_hidden_layers, n_outputs)
-
+	network = initialize_weights( n_inputs, n_hidden_layers, n_outputs)
+	print(network)
+	forward_propagation( [1,1], network )
 	# print(y_train)
 	# print(len(y_train))
 	# print("asdasdmflgsflgsdfijsndmfkoshdjfknglsdffl")
