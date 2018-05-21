@@ -43,7 +43,11 @@ def forward_propagation( X_train , network ):
 
 	print("TMP", tmp_out)
 
-
+def square_error( target_output, output ):
+	error = 0.
+	for i in range( len(output) ):
+		error += 0.5 * ( ( target_output[i] - output[i] ) ** 2 )
+	return error
 
 if __name__ == "__main__":
 
