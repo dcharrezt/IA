@@ -9,6 +9,7 @@ n_inputs = 2
 n_hidden_layers = [3, 2]
 n_outputs = 2
 
+learning_rate = 0.5
 
 def sigmoid( x ):
 	return 1 / ( 1 + math.exp(-x) )
@@ -57,6 +58,14 @@ def backward_propagation( network, y_train ):
 		for neuron, error in zip(layer, errors):
 			neuron['delta'] = error * sigmoid_derivative(neuron['output'])
 
+def update_weights( network, inputs ):
+	for layer, next_layer in zip(network, network[1:]):
+		for neuron in layer:
+			for i in range( len( inputs) ):
+				neuron['weights'][i]+= learning_rate*neuron['delta']*inputs[i]
+			neuron['weights'][-1] += learning_rate*neuron['delta']
+		inputs = [ neuron['output'] for neuron in next_layer ]
+
 if __name__ == "__main__":
 
 	iris = datasets.load_iris()
@@ -70,6 +79,7 @@ if __name__ == "__main__":
 	print( network )
 	backward_propagation( network, [0, 1] )
 	print( network )
+	update_weights( network, [1, 1] )
 	# print(y_train)
 	# print(len(y_train))
 	# print("asdasdmflgsflgsdfijsndmfkoshdjfknglsdffl")
