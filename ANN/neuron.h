@@ -1,7 +1,7 @@
 #ifndef NEURON_H
 #define NEURON_H
 
-#include "functions.h"
+#include "includes.h"
 
 class Neuron {
 	public:

@@ -25,8 +25,3 @@ void Neuron::create(int numInputs )
 		deltas[i] = 0; 
 	}
 }
-
-int main(){
-
-	return 0;
-}
