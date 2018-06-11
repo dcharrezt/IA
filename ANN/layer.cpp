@@ -23,6 +23,8 @@ Layer::~Layer()
 
 void Layer::create(int numLayerInputs, int numNeurons)
 {
+	this->numNeurons = numNeurons;
+	this->numLayerInputs = numLayerInputs;
 	neurons = new Neuron*[numNeurons];
 	for (int i = 0; i < numNeurons; ++i)
 	{
@@ -31,7 +33,20 @@ void Layer::create(int numLayerInputs, int numNeurons)
 	}
 
 	layerInputs = new float[numLayerInputs];
-	this->numNeurons = numNeurons;
-	this->numLayerInputs = numLayerInputs;
+}
+
+void Layer::getActivation( float(*activationFunction)(float) )
+{
+	float sum;
+
+	for (int i = 0; i < numNeurons; ++i)
+	{
+		sum = 0.;
+		for (int j = 0; i < numLayerInputs; ++j)
+		{
+			sum += neurons[i]->weights[j] * layerInputs[j];
+		}
+		neurons[i]->neuronOut = activationFunction( sum );
+	}
 }
 

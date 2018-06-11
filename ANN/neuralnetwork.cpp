@@ -17,6 +17,22 @@ NeuralNetwork::~NeuralNetwork()
 	}
 }
 
+// void NeuralNetwork::create( int numTrainingInputs, int numInputNeurons, 
+// 						int numOutputs, int *hiddenLayers, int numHiddenLayers)
+// {
+// 	inputLayer.create(  )
+// }
+
+void NeuralNetwork::forwardPropagation( float *input )
+{
+
+}
+float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs, 
+													float learningRate )
+{
+
+}
+
 int main(int argc, char const *argv[])
 {
 	

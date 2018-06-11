@@ -10,11 +10,12 @@ class Layer {
 		int numNeurons;
 		float *layerInputs;
 		int numLayerInputs;
-		// double(*activationFunction)(double) f;
+
 
 		Layer();
 		~Layer();
 		void create(int numLayerInputs, int numNeurons);
+		void getActivation( float(*activationFunction)(float) );
 };
 
 #endif

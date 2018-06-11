@@ -13,13 +13,13 @@ Neuron::~Neuron()
 		delete [] deltas;
 }
 
-void Neuron::create(int numInputs )
+void Neuron::create(int numConnections )
 {
 	float tmp;
-	weights = new float[ numInputs ];
-	deltas = new float[ numInputs ];
+	weights = new float[ numConnections ];
+	deltas = new float[ numConnections ];
 
-	for (int i = 0; i < numInputs; ++i)
+	for (int i = 0; i < numConnections; ++i)
 	{
 		weights[i] = ((float) rand() / (RAND_MAX)) + 1;
 		deltas[i] = 0; 

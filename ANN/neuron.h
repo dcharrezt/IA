@@ -11,7 +11,7 @@ class Neuron {
 
 		Neuron();
 		~Neuron();
-		void create( int numInputs );
+		void create( int numConnections );
 };
 
 #endif
