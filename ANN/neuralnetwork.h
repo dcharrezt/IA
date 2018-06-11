@@ -3,6 +3,10 @@
 
 #include "layer.h"
 
+float sigmoid( float x );
+float binaryStep( float x );
+float gaussian( float x );
+
 class NeuralNetwork {
 	private:
 		Layer inputLayer;
@@ -30,9 +34,12 @@ class NeuralNetwork {
 		void updateNextLayerInput( int layerIndex );
 
 
-		float sigmoid( float x );
-		float binaryStep( float x );
-		float gaussian( float x );
+
+
+		inline Layer &getOutput()
+		{
+        	return outputLayer;
+		}
 
 };
 

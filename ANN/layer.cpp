@@ -44,7 +44,7 @@ void Layer::getActivation()
 	for (int i = 0; i < numNeurons; ++i)
 	{
 		sum = 0.;
-		for (int j = 0; i < numLayerInputs; ++j)
+		for (int j = 0; j < numLayerInputs; ++j)
 		{
 			sum += neurons[i]->weights[j] * layerInputs[j];
 		}
