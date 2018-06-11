@@ -18,9 +18,9 @@ NeuralNetwork::~NeuralNetwork()
 }
 
 void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons, 
-			int numOutputLayerNeurons, int *sizesHiddenLayers, int numHiddenLayers)
+			int numOutputLayerNeurons, int *sizesHiddenLayers, int numHiddenLayers )
 {
-	inputLayer.create( numLayerInputs, numInputLayerNeurons );
+	inputLayer.create( numLayerInputs, numInputLayerNeurons, activationFunctions[0]);
 	if( hiddenLayers && numHiddenLayers)
 	{
 		this->hiddenLayers = new Layer*[ numHiddenLayers ];
@@ -29,20 +29,38 @@ void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons,
 		{
 			hiddenLayers[i] = new Layer;
 			if( i == 0 )
-				this->hiddenLayers[i]->create( numInputLayerNeurons, sizesHiddenLayers[i] );
+			{
+				this->hiddenLayers[i]->create( numInputLayerNeurons,
+						 sizesHiddenLayers[i], activationFunctions[0] );
+			}
 			else
-				this->hiddenLayers[i]->create( sizesHiddenLayers[i-1], sizesHiddenLayers[i] );
+			{
+				this->hiddenLayers[i]->create( sizesHiddenLayers[i-1], 
+					sizesHiddenLayers[i], activationFunctions[0] );
+			}
 		}
-		outputLayer.create( sizesHiddenLayers[numHiddenLayers-1], numOutputLayerNeurons );
+		outputLayer.create( sizesHiddenLayers[numHiddenLayers-1], 
+							numOutputLayerNeurons , activationFunctions[0]);
 	}
 	else
-		outputLayer.create( numInputLayerNeurons, numOutputLayerNeurons );
+		outputLayer.create( numInputLayerNeurons, numOutputLayerNeurons, 
+										activationFunctions[0] );
 }
 
 void NeuralNetwork::forwardPropagation( float *input )
 {
 	memcpy( inputLayer.layerInputs, input, inputLayer.numLayerInputs*sizeof(float));
-
+	inputLayer.getActivation();
+	updateNextLayerInput(-1);
+	if( hiddenLayers )
+	{
+		for (int i = 0; i < numHiddenLayers; ++i)
+		{
+			hiddenLayers[i]->getActivation();
+			updateNextLayerInput(i);
+		}
+	}
+	outputLayer.getActivation();
 }
 
 float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs, 
@@ -77,6 +95,16 @@ void NeuralNetwork::updateNextLayerInput( int layerIndex )
 							hiddenLayers[layerIndex]->neurons[i]->neuronOut;
 		}
 	}
+}
+
+float NeuralNetwork::sigmoid( float x )
+{
+	return 1/(1+exp(-x));
+}
+
+float NeuralNetwork::gaussian( float x )
+{
+	return exp(-pow(x,2));
 }
 
 int main(int argc, char const *argv[])

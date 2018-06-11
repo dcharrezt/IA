@@ -9,6 +9,9 @@ class NeuralNetwork {
 		Layer outputLayer;
 		Layer **hiddenLayers;
 		int numHiddenLayers;
+
+		float (*activationFunctions[2])(float);
+
 	public:
 		int numInputs;
 		int numOutputs;
@@ -25,7 +28,12 @@ class NeuralNetwork {
 		float backwardPropagation( float *targetOutput, float *inputs, 
 									float learningRate );
 		void updateNextLayerInput( int layerIndex );
-		
+
+
+		float sigmoid( float x );
+		float binaryStep( float x );
+		float gaussian( float x );
+
 };
 
 #endif
