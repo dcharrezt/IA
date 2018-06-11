@@ -24,6 +24,7 @@ class NeuralNetwork {
 		void forwardPropagation( float *input );
 		float backwardPropagation( float *targetOutput, float *inputs, 
 									float learningRate );
+		void updateNextLayerInput( int layerIndex );
 		
 };
 

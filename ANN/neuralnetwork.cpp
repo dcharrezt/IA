@@ -41,12 +41,42 @@ void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons,
 
 void NeuralNetwork::forwardPropagation( float *input )
 {
+	memcpy( inputLayer.layerInputs, input, inputLayer.numLayerInputs*sizeof(float));
 
 }
+
 float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs, 
 													float learningRate )
 {
 
+}
+
+void NeuralNetwork::updateNextLayerInput( int layerIndex )
+{
+	if( layerIndex == -1 )
+	{
+		for (int i = 0; i < inputLayer.numNeurons ; ++i)
+		{
+			if( hiddenLayers )
+				hiddenLayers[0]->layerInputs[i] = inputLayer.neurons[i]->neuronOut;
+			else
+				outputLayer.layerInputs[i] = inputLayer.neurons[i]->neuronOut;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < hiddenLayers[layerIndex]->numNeurons; ++i)
+		{
+			if( layerIndex < numHiddenLayers -1 )
+			{
+				hiddenLayers[layerIndex+1]->layerInputs[i] = 
+							hiddenLayers[layerIndex]->neurons[i]->neuronOut;
+			}
+			else
+				outputLayer.layerInputs[i] = 
+							hiddenLayers[layerIndex]->neurons[i]->neuronOut;
+		}
+	}
 }
 
 int main(int argc, char const *argv[])

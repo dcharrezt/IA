@@ -4,5 +4,6 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include <cstring>
 
 #endif
