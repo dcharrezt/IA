@@ -35,8 +35,3 @@ void Layer::create(int numLayerInputs, int numNeurons)
 	this->numLayerInputs = numLayerInputs;
 }
 
-int main(int argc, char const *argv[])
-{
-	
-	return 0;
-}
