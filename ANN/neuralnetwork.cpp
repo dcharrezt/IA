@@ -81,7 +81,7 @@ float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs,
 		output = outputLayer.neurons[i]->neuronOut;
 		localError += ( targetOutput[i]-output )*output*(1-output);
 		globalError += pow( (targetOutput[i] - output), 2 );
-		for (int j = 0; j < count; ++j)
+		for (int j = 0; j < outputLayer.numLayerInputs; ++j)
 		{
 			delta = outputLayer.neurons[j]->deltas[j];
 			udelta = learningRate*localError*outputLayer.layerInputs[i];
@@ -90,6 +90,39 @@ float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs,
 			sum += outputLayer.neurons[i]->weights[j]*localError;
 		}
 	}
+
+	for ( int i = numHiddenLayers-1 ; i >= 0; --i )
+	{
+		for (int j = 0; j < hiddenLayers[i]->numNeurons; ++j)
+		{
+			output = hiddenLayers[i]->neurons[j]->neuronOut;
+			localError = output * ( 1 - output ) * sum;
+			for ( int k = 0; k < hiddenLayers[i]->numLayerInputs; ++k )
+			{
+				delta = hiddenLayers[i]->neurons[j]->deltas[k];
+				udelta = learningRate*localError*hiddenLayers[i]->layerInputs[k];
+				hiddenLayers[i]->neurons[j]->weights[k] += udelta;
+				hiddenLayers[i]->neurons[j]->deltas[k] = udelta;
+				csum += hiddenLayers[i]->neurons[j]->weights[k] * localError;
+			}
+		}
+		sum = csum;
+		csum = 0;
+	}
+
+	for (int i = 0; i < inputLayer.numLayerInputs; ++i)
+	{
+		output = inputLayer.neurons[i]->neuronOut;
+		localError = output * ( 1 - output ) * sum;
+		for (int j = 0; j < inputLayer.numLayerInputs; ++j)
+		{
+			delta = inputLayer.neurons[i]->deltas[j];
+			udelta = learningRate*localError*inputLayer.layerInputs[j];
+			inputLayer.neurons[i]->weights[j] += udelta;
+			inputLayer.neurons[i]->deltas[j] = udelta;
+		}
+	}
+	return globalError/2;
 
 }
 
