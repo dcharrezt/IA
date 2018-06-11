@@ -66,6 +66,30 @@ void NeuralNetwork::forwardPropagation( float *input )
 float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs, 
 													float learningRate )
 {
+	float globalError = 0;
+	float localError;
+	float sum = 0;
+	float csum = 0;
+	float delta;
+	float udelta;
+	float output;
+
+	forwardPropagation( inputs );
+
+	for (int i = 0; i < outputLayer.numNeurons; ++i)
+	{
+		output = outputLayer.neurons[i]->neuronOut;
+		localError += ( targetOutput[i]-output )*output*(1-output);
+		globalError += pow( (targetOutput[i] - output), 2 );
+		for (int j = 0; j < count; ++j)
+		{
+			delta = outputLayer.neurons[j]->deltas[j];
+			udelta = learningRate*localError*outputLayer.layerInputs[i];
+			outputLayer.neurons[i]->weights[j]+=udelta;
+			outputLayer.neurons[i]->deltas[j] = udelta;
+			sum += outputLayer.neurons[i]->weights[j]*localError;
+		}
+	}
 
 }
 
