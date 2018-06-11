@@ -17,11 +17,27 @@ NeuralNetwork::~NeuralNetwork()
 	}
 }
 
-// void NeuralNetwork::create( int numTrainingInputs, int numInputNeurons, 
-// 						int numOutputs, int *hiddenLayers, int numHiddenLayers)
-// {
-// 	inputLayer.create(  )
-// }
+void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons, 
+			int numOutputLayerNeurons, int *sizesHiddenLayers, int numHiddenLayers)
+{
+	inputLayer.create( numLayerInputs, numInputLayerNeurons );
+	if( hiddenLayers && numHiddenLayers)
+	{
+		this->hiddenLayers = new Layer*[ numHiddenLayers ];
+		this->numHiddenLayers = numHiddenLayers;
+		for (int i = 0; i < numHiddenLayers; ++i)
+		{
+			hiddenLayers[i] = new Layer;
+			if( i == 0 )
+				this->hiddenLayers[i]->create( numInputLayerNeurons, sizesHiddenLayers[i] );
+			else
+				this->hiddenLayers[i]->create( sizesHiddenLayers[i-1], sizesHiddenLayers[i] );
+		}
+		outputLayer.create( sizesHiddenLayers[numHiddenLayers-1], numOutputLayerNeurons );
+	}
+	else
+		outputLayer.create( numInputLayerNeurons, numOutputLayerNeurons );
+}
 
 void NeuralNetwork::forwardPropagation( float *input )
 {

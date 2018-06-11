@@ -11,7 +11,6 @@ class Layer {
 		float *layerInputs;
 		int numLayerInputs;
 
-
 		Layer();
 		~Layer();
 		void create(int numLayerInputs, int numNeurons);

@@ -19,8 +19,8 @@ class NeuralNetwork {
 		NeuralNetwork();
 		~NeuralNetwork();
 
-		void create( int numInputs, int numInputNeurons, int numOutputs, 
-						int *hiddenLayers, int numHiddenLayers);
+		void create( int numLayerInputs, int numInputLayerNeurons, 
+			int numOutputLayerNeurons, int *hiddenLayers, int numHiddenLayers);
 		void forwardPropagation( float *input );
 		float backwardPropagation( float *targetOutput, float *inputs, 
 									float learningRate );
