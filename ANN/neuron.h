@@ -9,6 +9,9 @@ class Neuron {
 		float *deltas;
 		float neuronOut;
 
+		float bias = 1;
+		float biasWeight;
+
 		Neuron();
 		~Neuron();
 		void create( int numConnections );

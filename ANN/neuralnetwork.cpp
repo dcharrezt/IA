@@ -18,10 +18,8 @@ NeuralNetwork::~NeuralNetwork()
 }
 
 void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons, 
-			int numOutputLayerNeurons, int *sizesHiddenLayers, int numHiddenLayers )
+		int numOutputLayerNeurons, int *sizesHiddenLayers, int numHiddenLayers )
 {
-	// activationFunctions[0] = NeuralNetwork::sigmoid;
-	// activationFunctions[1] = NeuralNetwork::gaussian;
 	float (*activationFunctions[2])(float) = {sigmoid, gaussian};
 
 	inputLayer.create( numLayerInputs, numInputLayerNeurons, activationFunctions[0]);
@@ -55,12 +53,9 @@ void NeuralNetwork::forwardPropagation( float *input )
 {
 	memcpy( inputLayer.layerInputs, input, inputLayer.numLayerInputs*sizeof(float));
 	inputLayer.getActivation();
-
 	updateNextLayerInput(-1);
-	if( hiddenLayers )
-	{
-		for (int i = 0; i < numHiddenLayers; ++i)
-		{
+	if( hiddenLayers ) {
+		for (int i = 0; i < numHiddenLayers; ++i) {
 			hiddenLayers[i]->getActivation();
 			updateNextLayerInput(i);
 		}
@@ -71,52 +66,56 @@ void NeuralNetwork::forwardPropagation( float *input )
 float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs, 
 													float learningRate )
 {
-	float globalError = 0;
-	float localError;
-	float sum = 0;
-	float csum = 0;
+	float globalError = 0.;
+	float localError = 0.;
+	float sum = 0.;
+	float csum = 0.;
 	float delta;
 	float udelta;
 	float output;
 
 	forwardPropagation( inputs );
+
    
 	for (int i = 0; i < outputLayer.numNeurons; ++i)
 	{
 		output = outputLayer.neurons[i]->neuronOut;
-		localError += ( targetOutput[i]-output )*output*(1-output);
-		globalError += pow( (targetOutput[i] - output), 2 );
+		localError = ( targetOutput[i] - output ) * output * ( 1 - output );
+		globalError += (targetOutput[i] - output) * (targetOutput[i] - output) ;
 		for (int j = 0; j < outputLayer.numLayerInputs; ++j)
 		{
-			delta = outputLayer.neurons[i]->deltas[j];
-			udelta = learningRate*localError*outputLayer.layerInputs[i];
-			outputLayer.neurons[i]->weights[j]+=udelta;
+			udelta = learningRate * localError * outputLayer.layerInputs[j];
+			outputLayer.neurons[i]->weights[j] += udelta;
 			outputLayer.neurons[i]->deltas[j] = udelta;
 			sum += outputLayer.neurons[i]->weights[j]*localError;
 		}
+		outputLayer.neurons[i]->biasWeight += learningRate*localError*
+										outputLayer.neurons[i]->bias;
 	}
 
-	for ( int i = numHiddenLayers-1 ; i >= 0; --i )
+	for ( int i = (numHiddenLayers-1) ; i >= 0; i-- )
 	{
 		for (int j = 0; j < hiddenLayers[i]->numNeurons; ++j)
 		{
 			output = hiddenLayers[i]->neurons[j]->neuronOut;
 			localError = output * ( 1 - output ) * sum;
-			for ( int k = 0; k < hiddenLayers[i]->numLayerInputs; ++k )
-			{
-				delta = hiddenLayers[i]->neurons[j]->deltas[k];
+			for ( int k = 0; k < hiddenLayers[i]->numLayerInputs; ++k ) {
 				udelta = learningRate*localError*hiddenLayers[i]->layerInputs[k];
 				hiddenLayers[i]->neurons[j]->weights[k] += udelta;
 				hiddenLayers[i]->neurons[j]->deltas[k] = udelta;
 				csum += hiddenLayers[i]->neurons[j]->weights[k] * localError;
 			}
+
+			hiddenLayers[i]->neurons[j]->biasWeight += learningRate*
+								localError*hiddenLayers[i]->neurons[j]->bias;
 		}
 		sum = csum;
 		csum = 0;
 	}
 
-	for (int i = 0; i < inputLayer.numLayerInputs; ++i)
+	for (int i = 0; i < inputLayer.numNeurons; ++i)
 	{
+
 		output = inputLayer.neurons[i]->neuronOut;
 		localError = output * ( 1 - output ) * sum;
 		for (int j = 0; j < inputLayer.numLayerInputs; ++j)
@@ -126,6 +125,8 @@ float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs,
 			inputLayer.neurons[i]->weights[j] += udelta;
 			inputLayer.neurons[i]->deltas[j] = udelta;
 		}
+		inputLayer.neurons[i]->biasWeight += learningRate*localError*
+							inputLayer.neurons[i]->bias; 
 	}
 	return globalError/2;
 
@@ -161,7 +162,7 @@ void NeuralNetwork::updateNextLayerInput( int layerIndex )
 
 float sigmoid( float x )
 {
-	return 1/(1+exp(-x));
+	return 1./(1.+exp(-1.*x));
 }
 
 float gaussian( float x )

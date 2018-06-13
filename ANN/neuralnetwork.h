@@ -17,12 +17,6 @@ class NeuralNetwork {
 		float (*activationFunctions[2])(float);
 
 	public:
-		int numInputs;
-		int numOutputs;
-		int numEpochs;
-
-		double learningRate;
-
 		NeuralNetwork();
 		~NeuralNetwork();
 
@@ -32,9 +26,6 @@ class NeuralNetwork {
 		float backwardPropagation( float *targetOutput, float *inputs, 
 									float learningRate );
 		void updateNextLayerInput( int layerIndex );
-
-
-
 
 		inline Layer &getOutput()
 		{
