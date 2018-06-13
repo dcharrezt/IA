@@ -4,12 +4,15 @@
 #define PATTERN_SIZE 2
 #define NETWORK_INPUTNEURONS 3
 #define NETWORK_OUTPUT 1
-#define HIDDEN_LAYERS 0
+// #define HIDDEN_LAYERS 0
+#define NUM_HIDDEN_LAYERS 2
 #define EPOCHS 100000
 
+enum asd { Sigmoid , Gaussian };
 
 int main(int argc, char const *argv[])
 {
+
     float pattern[PATTERN_COUNT][PATTERN_SIZE]=
     {
         {0,0},
@@ -27,15 +30,15 @@ int main(int argc, char const *argv[])
     };
 
 
-    NeuralNetwork net;//Our neural network object
+    NeuralNetwork net;
     int i,j;
     float error;
-    //We create the network
+    int HIDDEN_LAYERS[2] = {2, 2};
+    int FUNCTIONS[4] = { Sigmoid, Sigmoid, Sigmoid, Sigmoid};
+
     net.create(PATTERN_SIZE,NETWORK_INPUTNEURONS,NETWORK_OUTPUT,HIDDEN_LAYERS,
-    														HIDDEN_LAYERS);
+    									2, FUNCTIONS);
 
-
-    //Start the neural network training
     for(i=0;i<EPOCHS;i++)
     {
         error=0;
@@ -44,19 +47,13 @@ int main(int argc, char const *argv[])
             error+=net.backwardPropagation(desiredout[j],pattern[j], 0.2);
         }
         error/=PATTERN_COUNT;
-        //display error
         cout << "ERROR:" << error << endl;
-        // cout << " ms " << net.getOutput().neurons[0]->neuronOut << endl;
     }
-
-    //once trained test all patterns
 
     for(i=0;i<PATTERN_COUNT;i++)
     {
 
         net.forwardPropagation(pattern[i]);
-
-    //display result
         cout << "TESTED PATTERN " << i << " DESIRED OUTPUT: " << *desiredout[i] << 
         " NET RESULT: "<< net.getOutput().neurons[0]->neuronOut << endl;
     }

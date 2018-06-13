@@ -18,11 +18,23 @@ NeuralNetwork::~NeuralNetwork()
 }
 
 void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons, 
-		int numOutputLayerNeurons, int *sizesHiddenLayers, int numHiddenLayers )
+		int numOutputLayerNeurons, int *sizesHiddenLayers, int numHiddenLayers,
+		int* functions )
 {
+
+    funcPerLayer = new int[numHiddenLayers+1];
+	memcpy( funcPerLayer, functions, (numHiddenLayers+1)*sizeof(int));
 	float (*activationFunctions[2])(float) = {sigmoid, gaussian};
 
-	inputLayer.create( numLayerInputs, numInputLayerNeurons, activationFunctions[0]);
+
+	cout << " asd" << endl;
+    for (int i = 0; i < 4; ++i)
+    {
+    	cout << functions[i] << endl;
+    }
+
+	inputLayer.create( numLayerInputs, numInputLayerNeurons, 
+			activationFunctions[functions[0]]);
 	if( hiddenLayers && numHiddenLayers)
 	{
 		this->hiddenLayers = new Layer*[ numHiddenLayers ];
@@ -33,20 +45,20 @@ void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons,
 			if( i == 0 )
 			{
 				this->hiddenLayers[i]->create( numInputLayerNeurons,
-						 sizesHiddenLayers[i], activationFunctions[0] );
+						 sizesHiddenLayers[i], activationFunctions[functions[i+1]] );
 			}
 			else
 			{
 				this->hiddenLayers[i]->create( sizesHiddenLayers[i-1], 
-					sizesHiddenLayers[i], activationFunctions[0] );
+					sizesHiddenLayers[i], activationFunctions[functions[i+1]] );
 			}
 		}
 		outputLayer.create( sizesHiddenLayers[numHiddenLayers-1], 
-							numOutputLayerNeurons , activationFunctions[0]);
+		numOutputLayerNeurons , activationFunctions[functions[numHiddenLayers+1]]);
 	}
 	else
 		outputLayer.create( numInputLayerNeurons, numOutputLayerNeurons, 
-										activationFunctions[0] );
+										activationFunctions[functions[1]] );
 }
 
 void NeuralNetwork::forwardPropagation( float *input )
@@ -74,13 +86,14 @@ float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs,
 	float udelta;
 	float output;
 
+	float (*derivativeAF[2])(float) = {derivativeSigmoid, derivativeGaussian};
 	forwardPropagation( inputs );
 
    
 	for (int i = 0; i < outputLayer.numNeurons; ++i)
 	{
 		output = outputLayer.neurons[i]->neuronOut;
-		localError = ( targetOutput[i] - output ) * output * ( 1 - output );
+		localError = ( targetOutput[i] - output ) * (*derivativeAF[funcPerLayer[0]])(output);
 		globalError += (targetOutput[i] - output) * (targetOutput[i] - output) ;
 		for (int j = 0; j < outputLayer.numLayerInputs; ++j)
 		{
@@ -98,7 +111,7 @@ float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs,
 		for (int j = 0; j < hiddenLayers[i]->numNeurons; ++j)
 		{
 			output = hiddenLayers[i]->neurons[j]->neuronOut;
-			localError = output * ( 1 - output ) * sum;
+			localError = (*derivativeAF[funcPerLayer[i+1]])(output) * sum;
 			for ( int k = 0; k < hiddenLayers[i]->numLayerInputs; ++k ) {
 				udelta = learningRate*localError*hiddenLayers[i]->layerInputs[k];
 				hiddenLayers[i]->neurons[j]->weights[k] += udelta;
@@ -117,7 +130,7 @@ float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs,
 	{
 
 		output = inputLayer.neurons[i]->neuronOut;
-		localError = output * ( 1 - output ) * sum;
+		localError =  (*derivativeAF[funcPerLayer[numHiddenLayers+1]])(output) * sum;
 		for (int j = 0; j < inputLayer.numLayerInputs; ++j)
 		{
 			delta = inputLayer.neurons[i]->deltas[j];
@@ -170,8 +183,12 @@ float gaussian( float x )
 	return exp(-pow(x,2));
 }
 
-// int main(int argc, char const *argv[])
-// {
-	
-// 	return 0;
-// }
+float derivativeSigmoid( float x )
+{
+	return x*( 1 - x );
+}
+
+float derivativeGaussian( float x )
+{
+	return -2*x*exp(-(x*x));
+}
