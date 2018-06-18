@@ -6,7 +6,7 @@
 float sigmoid( float x );
 float gaussian( float x );
 float identity( float x );
-float tanh( float x );
+float tanH( float x );
 float arctan( float x );
 float relu( float x);
 float leakyRelu( float x );
