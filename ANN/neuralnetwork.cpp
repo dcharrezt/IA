@@ -183,6 +183,13 @@ float gaussian( float x )
 	return exp(-pow(x,2));
 }
 
+float identity( float x );
+float tanh( float x );
+float arctan( float x );
+float relu( float x);
+float leakyRelu( float x );
+float softPlus( float x );
+
 float derivativeSigmoid( float x )
 {
 	return x*( 1 - x );
@@ -192,3 +199,11 @@ float derivativeGaussian( float x )
 {
 	return -2*x*exp(-(x*x));
 }
+
+
+float derivativeIdentity( float x );
+float derivativeTanh( float x );
+float derivativeArctan( float x );
+float derivativeRelu( float x );
+float derivativeleakyRelu( float x );
+float derivatiamsoftPlus( float x );

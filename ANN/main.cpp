@@ -8,7 +8,7 @@
 #define NUM_HIDDEN_LAYERS 2
 #define EPOCHS 100000
 
-enum asd { Sigmoid , Gaussian };
+enum actFunctions { Sigmoid , Gaussian };
 
 int main(int argc, char const *argv[])
 {

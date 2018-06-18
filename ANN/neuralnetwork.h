@@ -4,11 +4,22 @@
 #include "layer.h"
 
 float sigmoid( float x );
-float binaryStep( float x );
 float gaussian( float x );
+float identity( float x );
+float tanh( float x );
+float arctan( float x );
+float relu( float x);
+float leakyRelu( float x );
+float softPlus( float x );
 
 float derivativeSigmoid( float x );
 float derivativeGaussian( float x );
+float derivativeIdentity( float x );
+float derivativeTanh( float x );
+float derivativeArctan( float x );
+float derivativeRelu( float x );
+float derivativeleakyRelu( float x );
+float derivatiamsoftPlus( float x );
 
 class NeuralNetwork {
 	private:
