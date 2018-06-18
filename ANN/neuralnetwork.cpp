@@ -183,7 +183,10 @@ float gaussian( float x )
 	return exp(-pow(x,2));
 }
 
-float identity( float x );
+float identity( float x ) {
+	return x;
+}
+
 float tanh( float x );
 float arctan( float x );
 float relu( float x);
@@ -201,7 +204,9 @@ float derivativeGaussian( float x )
 }
 
 
-float derivativeIdentity( float x );
+float derivativeIdentity( float x ){
+	return 1;
+}
 float derivativeTanh( float x );
 float derivativeArctan( float x );
 float derivativeRelu( float x );
