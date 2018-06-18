@@ -27,13 +27,6 @@ void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons,
 	float (*activationFunctions[8])(float) = {sigmoid, gaussian, identity, 
 					tanH, arctan, relu, leakyRelu, softPlus};
 
-
-	cout << " asd" << endl;
-    for (int i = 0; i < 4; ++i)
-    {
-    	cout << functions[i] << endl;
-    }
-
 	inputLayer.create( numLayerInputs, numInputLayerNeurons, 
 			activationFunctions[functions[0]]);
 	if( hiddenLayers && numHiddenLayers)
@@ -59,7 +52,7 @@ void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons,
 	}
 	else
 		outputLayer.create( numInputLayerNeurons, numOutputLayerNeurons, 
-										activationFunctions[functions[1]] );
+										activationFunctions[functions[numHiddenLayers+1]] );
 }
 
 void NeuralNetwork::forwardPropagation( float *input )

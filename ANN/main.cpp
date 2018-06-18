@@ -1,21 +1,18 @@
 #include "neuralnetwork.h"
 
-#define PATTERN_COUNT 4
-#define PATTERN_SIZE 2
-#define NETWORK_INPUTNEURONS 3
-#define NETWORK_OUTPUT 1
-// #define HIDDEN_LAYERS 0
-#define NUM_HIDDEN_LAYERS 2
-#define EPOCHS 100000
+#define numTrainSet 4
+#define numInputs 2
+#define numNeuronsInputLayer 3
+#define numNeuronsOutputLayer 1
+#define numHiddenLayers 2
+#define epochs 100000
 
 enum actFunctions { Sigmoid, Gaussian, Identity, TanH, Arctan, Relu, 
 							LeakyRelu, SoftPlus };
 
+int main(int argc, char const *argv[]) {
 
-int main(int argc, char const *argv[])
-{
-
-    float pattern[PATTERN_COUNT][PATTERN_SIZE]=
+    float x_train[numTrainSet][numInputs]=
     {
         {0,0},
         {0,1},
@@ -23,7 +20,7 @@ int main(int argc, char const *argv[])
         {1,1}
     };
 
-    float desiredout[PATTERN_COUNT][NETWORK_OUTPUT]=
+    float targetOutput[numTrainSet][numNeuronsOutputLayer]=
     {
         {0},
         {1},
@@ -31,31 +28,27 @@ int main(int argc, char const *argv[])
         {0}
     };
 
-
     NeuralNetwork net;
     float error;
-    int HIDDEN_LAYERS[2] = {2, 2};
-    int FUNCTIONS[4] = { Sigmoid, Sigmoid, Sigmoid, Sigmoid};
+    int sizesHiddenLayers[2] = {2, 2};
+    int functionsPerLayer[4] = { Sigmoid, Sigmoid, Sigmoid, Sigmoid};
 
-    net.create(PATTERN_SIZE,NETWORK_INPUTNEURONS,NETWORK_OUTPUT,HIDDEN_LAYERS,
-    									2, FUNCTIONS);
+    net.create( numInputs, numNeuronsInputLayer, numNeuronsOutputLayer, 
+    				sizesHiddenLayers, numHiddenLayers, functionsPerLayer);
 
-    for( int i = 0; i < EPOCHS; i++)
-    {
+    for( int i = 0; i < epochs; i++) {
         error=0;
-        for(int j=0; j < PATTERN_COUNT; j++)
+        for(int j=0; j < numTrainSet; j++)
         {
-            error+=net.backwardPropagation(desiredout[j],pattern[j], 0.2);
+            error+=net.backwardPropagation(targetOutput[j],x_train[j], 0.2);
         }
-        error/=PATTERN_COUNT;
+        error/=numTrainSet;
         cout << "ERROR:" << error << endl;
     }
 
-    for(int i = 0; i < PATTERN_COUNT; i++)
-    {
-
-        net.forwardPropagation(pattern[i]);
-        cout << "TESTED PATTERN " << i << " DESIRED OUTPUT: " << *desiredout[i] << 
+    for(int i = 0; i < numTrainSet; i++) {
+        net.forwardPropagation(x_train[i]);
+        cout << "TESTED x_train " << i << " DESIRED OUTPUT: " << *targetOutput[i] << 
         " NET RESULT: "<< net.getOutput().neurons[0]->neuronOut << endl;
     }
 
