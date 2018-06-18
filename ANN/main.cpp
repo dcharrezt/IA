@@ -8,7 +8,9 @@
 #define NUM_HIDDEN_LAYERS 2
 #define EPOCHS 100000
 
-enum actFunctions { Sigmoid , Gaussian };
+enum actFunctions { Sigmoid, Gaussian, Identity, TanH, Arctan, Relu, 
+							LeakyRelu, SoftPlus };
+
 
 int main(int argc, char const *argv[])
 {
@@ -31,7 +33,6 @@ int main(int argc, char const *argv[])
 
 
     NeuralNetwork net;
-    int i,j;
     float error;
     int HIDDEN_LAYERS[2] = {2, 2};
     int FUNCTIONS[4] = { Sigmoid, Sigmoid, Sigmoid, Sigmoid};
@@ -39,10 +40,10 @@ int main(int argc, char const *argv[])
     net.create(PATTERN_SIZE,NETWORK_INPUTNEURONS,NETWORK_OUTPUT,HIDDEN_LAYERS,
     									2, FUNCTIONS);
 
-    for(i=0;i<EPOCHS;i++)
+    for( int i = 0; i < EPOCHS; i++)
     {
         error=0;
-        for(j=0;j<PATTERN_COUNT;j++)
+        for(int j=0; j < PATTERN_COUNT; j++)
         {
             error+=net.backwardPropagation(desiredout[j],pattern[j], 0.2);
         }
@@ -50,7 +51,7 @@ int main(int argc, char const *argv[])
         cout << "ERROR:" << error << endl;
     }
 
-    for(i=0;i<PATTERN_COUNT;i++)
+    for(int i = 0; i < PATTERN_COUNT; i++)
     {
 
         net.forwardPropagation(pattern[i]);
