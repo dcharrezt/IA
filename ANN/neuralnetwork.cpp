@@ -196,8 +196,24 @@ float arctan( float x )
 {
 	return atan( x );
 }
-float relu( float x);
-float leakyRelu( float x );
+
+float relu( float x )
+{
+	if( x < 0 )
+		return 0;
+	else
+		return x;
+}
+
+
+float leakyRelu( float x )
+{
+	if( x < 0)
+		return 0.001 * x;
+	else 
+		return x;
+}
+
 float softPlus( float x );
 
 float derivativeSigmoid( float x )
@@ -222,6 +238,20 @@ float derivativeTanh( float x )
 }
 
 float derivativeArctan( float x );
-float derivativeRelu( float x );
-float derivativeleakyRelu( float x );
+float derivativeRelu( float x )
+{
+	if( x <  0)
+		return 0;
+	else
+		return 1;
+}
+
+float derivativeleakyRelu( float x )
+{
+	if( x < 0 )
+		return 0.01;
+	else
+		return 1;
+}
+
 float derivatiamsoftPlus( float x );
