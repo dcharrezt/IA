@@ -187,8 +187,15 @@ float identity( float x ) {
 	return x;
 }
 
-float tanh( float x );
-float arctan( float x );
+float tanh( float x )
+{
+	return ( exp(x) - exp(-x) )/( exp(x) + exp(-x) );
+}
+
+float arctan( float x )
+{
+	return atan( x );
+}
 float relu( float x);
 float leakyRelu( float x );
 float softPlus( float x );
@@ -204,10 +211,16 @@ float derivativeGaussian( float x )
 }
 
 
-float derivativeIdentity( float x ){
+float derivativeIdentity( float x )
+{
 	return 1;
 }
-float derivativeTanh( float x );
+
+float derivativeTanh( float x )
+{
+	// return 1 - tanh( x ) * tanh( x );
+}
+
 float derivativeArctan( float x );
 float derivativeRelu( float x );
 float derivativeleakyRelu( float x );
