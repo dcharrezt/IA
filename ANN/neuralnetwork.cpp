@@ -24,7 +24,8 @@ void NeuralNetwork::create( int numLayerInputs, int numInputLayerNeurons,
 
     funcPerLayer = new int[numHiddenLayers+1];
 	memcpy( funcPerLayer, functions, (numHiddenLayers+1)*sizeof(int));
-	float (*activationFunctions[2])(float) = {sigmoid, gaussian};
+	float (*activationFunctions[8])(float) = {sigmoid, gaussian, identity, 
+					tanH, arctan, relu, leakyRelu, softPlus};
 
 
 	cout << " asd" << endl;
@@ -82,13 +83,13 @@ float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs,
 	float localError = 0.;
 	float sum = 0.;
 	float csum = 0.;
-	float delta;
 	float udelta;
 	float output;
 
-	float (*derivativeAF[2])(float) = {derivativeSigmoid, derivativeGaussian};
+	float (*derivativeAF[8])(float) = {derivativeSigmoid, derivativeGaussian, 
+		derivativeIdentity, derivativeTanh, derivativeArctan, derivativeRelu,
+		derivativeleakyRelu, derivatiamsoftPlus};
 	forwardPropagation( inputs );
-
    
 	for (int i = 0; i < outputLayer.numNeurons; ++i)
 	{
@@ -133,7 +134,6 @@ float NeuralNetwork::backwardPropagation( float *targetOutput, float *inputs,
 		localError =  (*derivativeAF[funcPerLayer[numHiddenLayers+1]])(output) * sum;
 		for (int j = 0; j < inputLayer.numLayerInputs; ++j)
 		{
-			delta = inputLayer.neurons[i]->deltas[j];
 			udelta = learningRate*localError*inputLayer.layerInputs[j];
 			inputLayer.neurons[i]->weights[j] += udelta;
 			inputLayer.neurons[i]->deltas[j] = udelta;

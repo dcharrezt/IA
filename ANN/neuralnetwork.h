@@ -30,8 +30,8 @@ class NeuralNetwork {
 
 		int numFunctions = 2;
 		int *funcPerLayer;
-		float (*activationFunctions[2])(float);
-		float (*derivativeAF[2])(float);
+		float (*activationFunctions[8])(float);
+		float (*derivativeAF[8])(float);
 
 	public:
 		NeuralNetwork();
