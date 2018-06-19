@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
+#include <omp.h>
+
 using namespace std;
 
 #endif

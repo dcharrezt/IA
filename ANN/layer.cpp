@@ -41,6 +41,7 @@ void Layer::getActivation()
 {
 	float sum;
 
+	// #  pragma omp parallel for private(sum)
 	for (int i = 0; i < numNeurons; ++i)
 	{
 		sum = 0.;

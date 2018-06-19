@@ -62,6 +62,8 @@ enum actFunctions { Sigmoid, Gaussian, Identity, TanH, Arctan, Relu,
 
 int main(int argc, char const *argv[]) {
 
+	double start, finish;
+
 	// XOR dataset
     // float x_train[numTrainSet][numInputs]=
     // {
@@ -123,6 +125,7 @@ int main(int argc, char const *argv[]) {
     net.create( numInputs, numNeuronsInputLayer, numNeuronsOutputLayer, 
     				sizesHiddenLayers, numHiddenLayers, functionsPerLayer);
 
+    start = omp_get_wtime();
     for( int i = 0; i < epochs; i++) {
         error=0;
         for(int j=0; j < numTrainSet; j++)
@@ -132,7 +135,7 @@ int main(int argc, char const *argv[]) {
         error/=numTrainSet;
         cout << "ERROR:" << error << endl;
     }
-
+	finish = omp_get_wtime();
 
     std::cout << "Testing " << std::endl;
 
@@ -201,14 +204,13 @@ int main(int argc, char const *argv[]) {
 	    	std::cout << total[j] << ' ';
     	}
     	c = 0;
-
-		std::cout << "\n\n Results " << std::endl;
-    	for (int j = 0; j < numNeuronsOutputLayer; ++j)
-    	{
-	    	std::cout << total_t[j] << ' ';
-    	}
-
     }
+
+	std::cout << "\n\n Results " << std::endl;
+	for (int j = 0; j < numNeuronsOutputLayer; ++j)
+	{
+    	std::cout << total_t[j] << ' ';
+	}
 
     // XOR dataset
     // for(int i = 0; i < numTrainSet; i++) {
@@ -216,6 +218,8 @@ int main(int argc, char const *argv[]) {
     //     cout << "TESTED x_train " << i << " DESIRED OUTPUT: " << *targetOutput[i] << 
     //     " NET RESULT: "<< net.getOutput().neurons[0]->neuronOut << endl;
     // }
+
+    printf("\nElapsed time = %e seconds\n", finish-start);
 
 
 	return 0;
