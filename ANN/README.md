@@ -21,8 +21,10 @@
 
 **Probado con**
  1. Iris dataset
+ 
 ![enter image description here](https://raw.githubusercontent.com/uddua/IA/master/ANN/imgs/iris.png)
- 2. XOR
+ 
+2. XOR
  
 ![enter image description here](https://raw.githubusercontent.com/uddua/IA/master/ANN/imgs/xor.png)
  
